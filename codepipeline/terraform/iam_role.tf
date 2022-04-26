@@ -38,15 +38,12 @@ resource "aws_iam_role_policy" "codebuild" {
     {
       "Effect": "Allow",
       "Action": [
-        "ec2:CreateNetworkInterface",
-        "ec2:DescribeDhcpOptions",
-        "ec2:DescribeNetworkInterfaces",
-        "ec2:DeleteNetworkInterface",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeVpcs"
+        "s3:*"
       ],
-      "Resource": "*"
+      "Resource": [
+        "${aws_s3_bucket.codepipeline_bucket.arn}",
+        "${aws_s3_bucket.codepipeline_bucket.arn}/*"
+      ]
     }
   ]
 }
