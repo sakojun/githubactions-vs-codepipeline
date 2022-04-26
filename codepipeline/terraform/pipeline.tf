@@ -1,25 +1,6 @@
-resource "aws_codebuild_project" "example" {
-  name          = "${var.prefix}-test-project"
-  service_role  = aws_iam_role.codebuild.arn
-
-  artifacts {
-    type = "CODEPIPELINE"
-  }
-  source {
-    type            = "CODEPIPELINE"
-    buildspec       = "codepipeline/buildspec.yml"
-  }
-  environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/standard:3.0"
-    type                        = "LINUX_CONTAINER"
-  }
-}
-
 resource "aws_codepipeline" "codepipeline" {
   name     = "${var.prefix}-test-pipeline"
   role_arn = aws_iam_role.codepipeline.arn
-
   artifact_store {
     location = aws_s3_bucket.codepipeline_bucket.bucket
     type     = "S3"
@@ -60,6 +41,23 @@ resource "aws_codepipeline" "codepipeline" {
         ProjectName = aws_codebuild_project.example.name
       }
     }
+  }
+}
+
+resource "aws_codebuild_project" "example" {
+  name          = "${var.prefix}-test-project"
+  service_role  = aws_iam_role.codebuild.arn
+  artifacts {
+    type = "CODEPIPELINE"
+  }
+  source {
+    type            = "CODEPIPELINE"
+    buildspec       = "codepipeline/buildspec.yml"
+  }
+  environment {
+    compute_type                = "BUILD_GENERAL1_SMALL"
+    image                       = "aws/codebuild/standard:5.0"
+    type                        = "LINUX_CONTAINER"
   }
 }
 
